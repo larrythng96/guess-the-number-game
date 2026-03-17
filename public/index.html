@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guess the Number</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+
+    <!-- Step 0: Welcome -->
+    <div id="step-welcome" class="step">
+      <div class="hero">
+        <h1>🎯 Guess the Number</h1>
+        <p class="subtitle">A multiplayer guessing game played through the browser URL bar.</p>
+        <p class="text-muted">One player sets a secret number. The rest take turns guessing it via simple URLs. Too high? Too low? Find out!</p>
+      </div>
+      <button id="btn-new-game" class="btn-primary btn-large">New Game</button>
+    </div>
+
+    <!-- Step 1: Configure -->
+    <div id="step-configure" class="step hidden">
+      <div class="step-header">
+        <span class="step-number">1</span>
+        <h2>Configure the Game</h2>
+      </div>
+      <div class="section">
+        <form id="game-form">
+          <div class="form-group">
+            <label for="numGuessers">How many guessers?</label>
+            <input type="number" id="numGuessers" min="1" value="2" required>
+            <span class="hint">Players who will guess (not counting the secret setter)</span>
+          </div>
+          <div class="form-group">
+            <label for="maxNumber">Max number in range</label>
+            <input type="number" id="maxNumber" min="1" value="100" required>
+            <span class="hint">Secret and guesses must be between 1 and this number</span>
+          </div>
+          <div id="config-error" class="error-message" role="alert"></div>
+          <div class="btn-row">
+            <button type="button" id="btn-back-welcome" class="btn-secondary">Back</button>
+            <button type="submit" class="btn-primary">Create Game →</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Step 2: Set Secret -->
+    <div id="step-secret" class="step hidden">
+      <div class="step-header">
+        <span class="step-number">2</span>
+        <h2>Set the Secret Number</h2>
+      </div>
+      <div class="section">
+        <p>The <strong>Secret Setter</strong> should open this URL in their browser, replacing <code>42</code> with their chosen number:</p>
+        <pre class="url-block"><code id="secret-url"></code></pre>
+        <p class="text-muted">The number must be between 1 and <span id="secret-max"></span>.</p>
+        <div class="waiting-indicator">
+          <span class="spinner"></span> Waiting for secret to be set...
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Guessing -->
+    <div id="step-playing" class="step hidden">
+      <div class="step-header">
+        <span class="step-number">3</span>
+        <h2>Guessing Time!</h2>
+      </div>
+
+      <!-- Turn indicator -->
+      <div id="turn-indicator" class="turn-card">
+        <span class="turn-label">Current turn</span>
+        <span class="turn-player" id="current-player-display">Player 1</span>
+      </div>
+
+      <!-- Guess URL instructions -->
+      <div class="section">
+        <p>Open this URL in your browser to guess (replace <code>PLAYER</code> and <code>NUMBER</code>):</p>
+        <pre class="url-block"><code id="guess-url"></code></pre>
+        <p class="text-muted">Number must be between 1 and <span id="guess-max"></span>.</p>
+      </div>
+
+      <!-- Live guess history -->
+      <div class="section">
+        <h2>Guess History</h2>
+        <div id="guess-list" class="guess-list">
+          <p class="text-muted" id="no-guesses">No guesses yet. Waiting for Player 1...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Game Over -->
+    <div id="step-complete" class="step hidden">
+      <div class="winner-banner">
+        <div class="trophy">🏆</div>
+        <h2 id="winner-text">Player 1 wins!</h2>
+        <p id="winner-detail" class="text-muted">Guessed correctly in 5 attempts</p>
+      </div>
+
+      <!-- Final guess history -->
+      <div class="section">
+        <h2>Final Results</h2>
+        <div id="final-guess-list" class="guess-list"></div>
+      </div>
+
+      <button id="btn-play-again" class="btn-primary btn-large">Play Again</button>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
