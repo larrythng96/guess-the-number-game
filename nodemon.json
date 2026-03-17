@@ -1,0 +1,5 @@
+{
+  "watch": ["server.js", "swagger.js"],
+  "ignore": ["node_modules", "public", "tests"],
+  "ext": "js"
+}

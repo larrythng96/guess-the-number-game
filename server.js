@@ -1,9 +1,12 @@
 const express = require('express');
 const path = require('path');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
 
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 let gameSession = null;
 
@@ -19,6 +22,32 @@ function setGameSession(session) {
   gameSession = session;
 }
 
+/**
+ * @swagger
+ * /api/game:
+ *   get:
+ *     summary: Create a new game
+ *     parameters:
+ *       - in: query
+ *         name: numGuessers
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Number of players
+ *       - in: query
+ *         name: maxNumber
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Upper bound for the secret number
+ *     responses:
+ *       201:
+ *         description: Game created
+ *       400:
+ *         description: Invalid parameters
+ */
 app.get('/api/game', (req, res) => {
   const rawGuessers = req.query.numGuessers;
   const rawMax = req.query.maxNumber;
@@ -42,6 +71,17 @@ app.get('/api/game', (req, res) => {
   return res.status(201).json({ message: 'Game created', numGuessers, maxNumber });
 });
 
+/**
+ * @swagger
+ * /api/state:
+ *   get:
+ *     summary: Get current game state
+ *     responses:
+ *       200:
+ *         description: Current game state
+ *       400:
+ *         description: No active game
+ */
 app.get('/api/state', (req, res) => {
   const session = getGameSession();
   if (!session) {
@@ -59,6 +99,25 @@ app.get('/api/state', (req, res) => {
   });
 });
 
+/**
+ * @swagger
+ * /api/secret:
+ *   get:
+ *     summary: Set the secret number
+ *     parameters:
+ *       - in: query
+ *         name: secret
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: The secret number (must be between 1 and maxNumber)
+ *     responses:
+ *       200:
+ *         description: Secret set successfully
+ *       400:
+ *         description: Invalid secret or no active game
+ */
 app.get('/api/secret', (req, res) => {
   const session = getGameSession();
   if (!session) {
@@ -75,6 +134,31 @@ app.get('/api/secret', (req, res) => {
   return res.status(200).json({ message: 'Secret number set. Guessing can begin!' });
 });
 
+/**
+ * @swagger
+ * /api/guess:
+ *   get:
+ *     summary: Make a guess
+ *     parameters:
+ *       - in: query
+ *         name: player
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Player number (must match current turn)
+ *       - in: query
+ *         name: guess
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: The guessed number
+ *     responses:
+ *       200:
+ *         description: Guess result (too_high, too_low, or correct)
+ *       400:
+ *         description: Invalid guess, wrong turn, or no active game
+ */
 app.get('/api/guess', (req, res) => {
   const session = getGameSession();
   if (!session) {
@@ -116,6 +200,15 @@ app.get('/api/guess', (req, res) => {
   return res.status(200).json({ result, player, guess, nextPlayer: session.currentPlayer });
 });
 
+/**
+ * @swagger
+ * /api/reset:
+ *   get:
+ *     summary: Reset the current game
+ *     responses:
+ *       200:
+ *         description: Game reset successfully
+ */
 app.get('/api/reset', (req, res) => {
   resetGameSession();
   return res.status(200).json({ message: 'Game reset' });
