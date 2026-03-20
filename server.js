@@ -1,8 +1,10 @@
-const express = require('express');
-const path = require('path');
-const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./swagger');
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './swagger.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -214,10 +216,10 @@ app.get('/api/reset', (req, res) => {
   return res.status(200).json({ message: 'Game reset' });
 });
 
-if (require.main === module) {
+if (process.argv[1] && import.meta.url === `file://${process.argv[1]}`) {
   app.listen(3000, () => {
     console.log('Server running on port 3000');
   });
 }
 
-module.exports = { app, getGameSession, setGameSession, resetGameSession };
+export { app, getGameSession, setGameSession, resetGameSession };

@@ -1,5 +1,5 @@
-const request = require('supertest');
-const { app, resetGameSession } = require('../server');
+import request from 'supertest';
+import { app, resetGameSession } from '../server.js';
 
 // Unit tests for Guess the Number Game API
 // Validates: Requirements 1.4, 2.3, 2.4, 3.3, 3.4, 3.5, 3.6, 5.5, 7.1

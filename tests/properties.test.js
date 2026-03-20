@@ -1,6 +1,6 @@
-const request = require('supertest');
-const fc = require('fast-check');
-const { app, resetGameSession } = require('../server');
+import request from 'supertest';
+import fc from 'fast-check';
+import { app, resetGameSession } from '../server.js';
 
 // Feature: guess-the-number-game, Property 1: Game creation round trip
 // Validates: Requirements 1.4, 1.5
