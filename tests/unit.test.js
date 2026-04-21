@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach } from 'vitest';
 import request from 'supertest';
 import { app, resetGameSession } from '../server.js';
 
