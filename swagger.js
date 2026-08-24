@@ -9,7 +9,7 @@ const options = {
       description: 'A multiplayer guess-the-number game API',
     },
   },
-  apis: ['./server.js'],
+  apis: ['./index.js'],
 };
 
 export default swaggerJsdoc(options);

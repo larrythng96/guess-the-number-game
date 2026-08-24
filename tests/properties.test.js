@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import request from 'supertest';
-import { app, resetGameSession } from '../server.js';
+import { app, resetGameSession } from '../index.js';
 
 // Simplified integration tests (replacing heavy property-based tests)
 // These tests verify core behaviors with reasonable coverage
